@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz App</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .question { font-weight: bold; }
+        button { display: block; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div id="quiz"></div>
+    <button onclick="nextQuestion()">Next</button>
+
+    <script>
+        const questions = [
+            { q: 'What is 2 + 2?', a: '4' },
+            { q: 'What is the capital of France?', a: 'Paris' },
+        ];
+        let index = 0;
+
+        function nextQuestion() {
+            if (index < questions.length) {
+                const q = questions[index++];
+                document.getElementById('quiz').innerHTML = `<div class='question'>${q.q}</div><div>Answer: ${q.a}</div>`;
+            } else {
+                document.getElementById('quiz').innerHTML = 'Quiz Completed!';
+            }
+        }
+        nextQuestion();
+    </script>
+</body>
+</html>
