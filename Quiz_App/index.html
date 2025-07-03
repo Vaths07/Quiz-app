@@ -1,33 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Quiz App</title>
-    <style>
-        body { font-family: Arial; padding: 20px; }
-        .question { font-weight: bold; }
-        button { display: block; margin: 10px 0; }
-    </style>
+  <meta charset="UTF-8" />
+  <title>Extended Quiz App</title>
+  <style>
+    body { font-family: 'Segoe UI'; background: #eef2f3; text-align: center; padding: 20px; }
+    .quiz-container { max-width: 700px; margin: auto; background: white; padding: 2rem; border-radius: 12px; }
+    .question-img { width: 100%; border-radius: 10px; max-height: 200px; object-fit: cover; }
+    .question { font-size: 1.2rem; margin-top: 1rem; }
+    .option { background: #ddd; padding: 10px; margin: 5px; border-radius: 8px; cursor: pointer; }
+    .option:hover { background: #ccc; }
+    .correct { background: #c8f7c5 !important; }
+    .incorrect { background: #f7c5c5 !important; }
+    button { margin-top: 1rem; padding: 10px 20px; border: none; border-radius: 8px; background: #007bff; color: white; }
+    .score, .result { margin-top: 1rem; font-size: 1.2rem; }
+  </style>
 </head>
 <body>
-    <div id="quiz"></div>
-    <button onclick="nextQuestion()">Next</button>
-
-    <script>
-        const questions = [
-            { q: 'What is 2 + 2?', a: '4' },
-            { q: 'What is the capital of France?', a: 'Paris' },
-        ];
-        let index = 0;
-
-        function nextQuestion() {
-            if (index < questions.length) {
-                const q = questions[index++];
-                document.getElementById('quiz').innerHTML = `<div class='question'>${q.q}</div><div>Answer: ${q.a}</div>`;
-            } else {
-                document.getElementById('quiz').innerHTML = 'Quiz Completed!';
-            }
-        }
-        nextQuestion();
-    </script>
+  <div class="quiz-container">
+    <img id="q-img" class="question-img" src="" alt="Question image" />
+    <div id="question" class="question"></div>
+    <div id="options"></div>
+    <button id="confirm" onclick="confirmAnswer()">Confirm</button>
+    <div id="score" class="score"></div>
+    <button id="next" onclick="nextQuestion()" style="display:none;">Next</button>
+    <div id="result" class="result"></div>
+  </div>
+  <script>
+    const questions = [
+      { q: "2 + 2 = ?", a: "4", o: ["3", "4", "5", "6"], img: "https://source.unsplash.com/600x200/?math" },
+      { q: "Capital of Japan?", a: "Tokyo", o: ["Seoul", "Kyoto", "Tokyo", "Osaka"], img: "https://source.unsplash.com/600x200/?japan" },
+      { q: "Who painted Mona Lisa?", a: "Leonardo da Vinci", o: ["Van Gogh", "Picasso", "Leonardo da Vinci", "Michelangelo"], img: "https://source.unsplash.com/600x200/?art" },
+      { q: "H2O is known as?", a: "Water", o: ["Oxygen", "Hydrogen", "Salt", "Water"], img: "https://source.unsplash.com/600x200/?water" },
+      { q: "Indian Independence year?", a: "1947", o: ["1945", "1947", "1950", "1935"], img: "https://source.unsplash.com/600x200/?india" }
+    ];
+    let idx = 0, score = 0, selected = "";
+    function loadQuestion() {
+      const q = questions[idx];
+      document.getElementById("question").textContent = q.q;
+      document.getElementById("q-img").src = q.img;
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("score").innerHTML = "";
+      document.getElementById("confirm").style.display = "inline-block";
+      document.getElementById("next").style.display = "none";
+      selected = "";
+      q.o.forEach(opt => {
+        const div = document.createElement("div");
+        div.className = "option";
+        div.textContent = opt;
+        div.onclick = () => {
+          document.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+          div.classList.add("selected");
+          selected = opt;
+        };
+        document.getElementById("options").appendChild(div);
+      });
+    }
+    function confirmAnswer() {
+      if (!selected) return alert("Please select an answer.");
+      const q = questions[idx];
+      document.querySelectorAll(".option").forEach(el => {
+        if (el.textContent === q.a) el.classList.add("correct");
+        if (el.textContent === selected && el.textContent !== q.a) el.classList.add("incorrect");
+      });
+      score += selected === q.a ? 2 : -1;
+      document.getElementById("score").textContent = selected === q.a ? "✅ Correct! +2" : "❌ Wrong! -1";
+      document.getElementById("confirm").style.display = "none";
+      document.getElementById("next").style.display = "inline-block";
+    }
+    function nextQuestion() {
+      idx++;
+      if (idx < questions.length) loadQuestion();
+      else showResult();
+    }
+    function showResult() {
+      let grade = score >= 10 ? "🟢 Grade A" : score >= 6 ? "🟡 Grade B" : score >= 2 ? "🟠 Grade C" : "🔴 Grade D";
+      document.getElementById("question").textContent = "";
+      document.getElementById("options").innerHTML = "";
+      document.getElementById("score").textContent = "";
+      document.getElementById("result").innerHTML = `🎯 Score: ${score} / ${questions.length * 2}<br>${grade}`;
+      document.getElementById("q-img").style.display = "none";
+      document.getElementById("confirm").style.display = "none";
+      document.getElementById("next").style.display = "none";
+    }
+    loadQuestion();
+  </script>
 </body>
 </html>
