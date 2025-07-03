@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Quiz Backend Template</title>
+</head>
+<body>
+  <h1>Quiz Submission Portal</h1>
+  <form method="POST" action="/submit-quiz">
+    <label>Name:</label><input type="text" name="username" required /><br /><br />
+    <label>Q1: 2 + 2 = ?</label><br />
+    <input type="radio" name="q1" value="3" /> 3
+    <input type="radio" name="q1" value="4" /> 4
+    <input type="radio" name="q1" value="5" /> 5
+    <input type="radio" name="q1" value="6" /> 6
+    <br /><br />
+    <label>Q2: Capital of India?</label><br />
+    <input type="radio" name="q2" value="Delhi" /> Delhi
+    <input type="radio" name="q2" value="Mumbai" /> Mumbai
+    <input type="radio" name="q2" value="Chennai" /> Chennai
+    <input type="radio" name="q2" value="Kolkata" /> Kolkata
+    <br /><br />
+    <button type="submit">Submit Quiz</button>
+  </form>
+</body>
+</html>
